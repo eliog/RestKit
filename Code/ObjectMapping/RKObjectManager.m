@@ -150,6 +150,20 @@ static RKObjectManager* sharedManager = nil;
 	return loader;
 }
 
+- (RKObjectLoader*)loadObjectsAtResourcePath:(NSString *)resourcePath objectClass:(Class<RKObjectMappable>)objectClass withPostOf:(NSObject<RKObjectMappable>*)object delegate:(NSObject <RKObjectLoaderDelegate>*)delegate {
+	RKObjectLoader* loader = [self objectLoaderWithResourcePath:resourcePath delegate:delegate];
+	loader.method = RKRequestMethodPOST;
+	NSObject<RKRequestSerializable>* params = [self.router serializationForObject:object method:loader.method];
+	
+	loader.params = [RKJSONSerialization JSONSerializationWithObject:params];
+	loader.objectClass = objectClass;
+	loader.managedObjectStore = self.objectStore;
+
+	[loader send];
+	
+	return loader;
+}
+
 - (RKObjectLoader*)loadObjectsAtResourcePath:(NSString*)resourcePath objectClass:(Class<RKObjectMappable>)objectClass delegate:(NSObject<RKObjectLoaderDelegate>*)delegate {
 	RKObjectLoader* loader = [self objectLoaderWithResourcePath:resourcePath delegate:delegate];
 	loader.method = RKRequestMethodGET;

@@ -140,6 +140,11 @@ typedef enum {
 - (RKObjectLoader*)loadObjectsAtResourcePath:(NSString*)resourcePath objectClass:(Class<RKObjectMappable>)objectClass delegate:(NSObject<RKObjectLoaderDelegate>*)delegate;
 
 /**
+ * used to post an object and get return objects
+ */
+- (RKObjectLoader*)loadObjectsAtResourcePath:(NSString *)resourcePath objectClass:(Class<RKObjectMappable>)objectClass withPostOf:(NSObject<RKObjectMappable>*)object delegate:(NSObject <RKObjectLoaderDelegate>*)delegate;
+
+/**
  * Create and send an asynchronous GET request to load the objects at the specified resource path with a dictionary
  * of query parameters to append to the URL and call back the delegate with the loaded objects. Remote objects will be mapped into 
  * instances of the specified object mappable class.

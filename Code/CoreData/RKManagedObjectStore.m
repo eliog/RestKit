@@ -102,21 +102,46 @@ static NSString* const kRKManagedObjectContextKey = @"RKManagedObjectContext";
 							 [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
 	
 	if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeUrl options:options error:&error]) {
-		// TODO: Needs to be handled with delegation... Allow the application to handle migration.
+		NSLog(@"error initializing Store");
+		[[NSFileManager defaultManager] removeItemAtPath:storeUrl.path error:&error];
+		UIAlertView *alert =
+		[[UIAlertView alloc] initWithTitle: @"Database Initialized"
+								   message: @"Database has been initialized."
+								  delegate: self
+						 cancelButtonTitle: @"OK"
+						 otherButtonTitles: nil];
+		[alert show];
+		[alert release]; 
+		
+		if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeUrl options:options error:&error]) {
+			NSLog(@"error 2nd try init store");
+			UIAlertView *alert =
+			[[UIAlertView alloc] initWithTitle: @"Database Error"
+									   message: [error localizedDescription]
+									  delegate: self
+							 cancelButtonTitle: @"OK"
+							 otherButtonTitles: nil];
+			[alert show];
+			[alert release]; 
+			
+		} else {
+			
+		}
     }
 }
 
 - (void)deletePersistantStore {
 	NSURL* storeUrl = [NSURL fileURLWithPath: [[self applicationDocumentsDirectory] stringByAppendingPathComponent:_storeFilename]];
 	NSError* error = nil;
-	NSLog(@"Error removing persistant store: %@", [error localizedDescription]);
+	
+	
 	if (error) {
 		//Handle error
-	}
-	error = nil;
-	[[NSFileManager defaultManager] removeItemAtPath:storeUrl.path error:&error];
-	if (error) {
-		//Handle error
+		NSLog(@"Error removing persistant store: %@", [error localizedDescription]);
+		if (error) {
+			//Handle error
+		}
+		error = nil;
 	}
 	
 	[_persistentStoreCoordinator release];
