@@ -32,6 +32,7 @@
 		_connection = nil;
 		_isLoading = NO;
 		_isLoaded = NO;
+        [_URLRequest setTimeoutInterval: 300];
 	}
 	return self;
 }
