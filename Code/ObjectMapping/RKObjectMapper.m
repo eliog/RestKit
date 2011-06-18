@@ -20,6 +20,7 @@
 // TODO: Rails specifics should probably move elsewhere...
 static const NSString* kRKModelMapperRailsDateTimeFormatString = @"yyyy-MM-dd'T'HH:mm:ss'Z'"; // 2009-08-08T17:23:59Z
 static const NSString* kRKModelMapperRailsDateFormatString = @"MM/dd/yyyy";
+static const NSString* kRKModelMapperNetDateTimeFormatString = @"'Date('ssssssssss'-'ssss')'"; 
 static const NSString* kRKModelMapperMappingFormatParserKey = @"RKMappingFormatParser";
 
 @interface RKObjectMapper (Private)
@@ -62,7 +63,7 @@ static const NSString* kRKModelMapperMappingFormatParserKey = @"RKMappingFormatP
 		_format = RKMappingFormatJSON;
 		_missingElementMappingPolicy = RKIgnoreMissingElementMappingPolicy;
 		_inspector = [[RKObjectPropertyInspector alloc] init];
-		self.dateFormats = [NSArray arrayWithObjects:kRKModelMapperRailsDateTimeFormatString, kRKModelMapperRailsDateFormatString, nil];
+		self.dateFormats = [NSArray arrayWithObjects:kRKModelMapperRailsDateTimeFormatString, kRKModelMapperRailsDateFormatString, kRKModelMapperNetDateTimeFormatString, nil];
 		self.remoteTimeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
 		self.localTimeZone = [NSTimeZone localTimeZone];
 		self.errorsKeyPath = @"errors";
@@ -433,32 +434,42 @@ static const NSString* kRKModelMapperMappingFormatParserKey = @"RKMappingFormatP
 ///////////////////////////////////////////////////////////////////////////////
 // Date & Time Helpers
 
-- (NSDate*)parseDateFromString:(NSString*)string {
-	NSDate* date = nil;
-	NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-	// TODO: I changed this to local time and it fixes my date issues. wtf?
-	[formatter setTimeZone:self.localTimeZone];
-	for (NSString* formatString in self.dateFormats) {
-		[formatter setDateFormat:formatString];
-		date = [formatter dateFromString:string];
-		if (date) {
-			break;
-		}
-	}
-	
-	[formatter release];
-	return date;
-}
+- (NSDate*)parseDateFromString:(NSString*)string { 
+    NSDate* date = nil; 
+    NSDateFormatter* formatter = [[NSDateFormatter alloc] init]; 
+    // TODO: I changed this to local time and it fixes my date issues.     wtf? 
+    [formatter setTimeZone:self.localTimeZone]; 
+    for (NSString* formatString in self.dateFormats) { 
+        [formatter setDateFormat:formatString]; 
+        //Handle .NET unix-style dates 
+        if(formatString == kRKModelMapperNetDateTimeFormatString && string != nil) 
+        { 
+            NSString *ticks = [string substringWithRange:NSMakeRange(6, 10)]; 
+            NSScanner *dateScanner = [NSScanner scannerWithString:ticks]; 
+            double timestamp; 
+            if(!([dateScanner scanDouble:&timestamp])) 
+            { 
+            } 
+            //Produces the date (albeit with no offset) 
+            date = [NSDate dateWithTimeIntervalSince1970:timestamp]; 
+                   // move to local timezone
+                        
+            
+            
+        } 
+        else { 
+            date = [formatter dateFromString:string]; 
+        } 
+        if (date) { 
+            break; 
+        } 
+    } 
+    [formatter release]; 
+    return date; 
+} 
 
 - (NSDate*)dateInLocalTime:(NSDate*)date {
-	NSDate* destinationDate = nil;
-	if (date) {
-		NSInteger remoteGMTOffset = [self.remoteTimeZone secondsFromGMTForDate:date];
-		NSInteger localGMTOffset = [self.localTimeZone secondsFromGMTForDate:date];
-		NSTimeInterval interval = localGMTOffset - remoteGMTOffset;		
-		destinationDate = [[[NSDate alloc] initWithTimeInterval:interval sinceDate:date] autorelease];
-	}	
-	return destinationDate;
+	 	return date;
 }
 
 @end

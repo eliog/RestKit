@@ -36,7 +36,7 @@
 #pragma mark Gen
 
 - (NSString *)yajl_JSONString {
-  return [self yajl_JSONStringWithOptions:YAJLGenOptionsNone indentString:@"  "];
+  return [self yajl_JSONStringWithOptions:YAJLGenOptionsIncludeUnsupportedTypes  indentString:@"  "];
 }
 
 - (NSString *)yajl_JSONStringWithOptions:(YAJLGenOptions)options indentString:(NSString *)indentString {
