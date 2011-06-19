@@ -86,7 +86,9 @@ NSString *const YAJLGenInvalidObjectException = @"YAJLGenInvalidObjectException"
     if (genOptions_ & YAJLGenOptionsIncludeUnsupportedTypes) {
       // Begin with support for non-JSON representable (PList) types
       if ([obj isKindOfClass:[NSDate class]]) { 
-        [self number:[NSNumber numberWithLongLong:round([obj timeIntervalSince1970] * 1000)]];
+          NSTimeInterval ticks = [obj timeIntervalSince1970]; 
+          [self string:[NSString stringWithFormat:@"\/Date(%.0f-0000)\/", ticks*1000]];
+        
       } else if ([obj isKindOfClass:[NSData class]]) {
         [self string:[YAJL_GTMBase64 stringByEncodingData:obj]];
       } else if ([obj isKindOfClass:[NSURL class]]) {
