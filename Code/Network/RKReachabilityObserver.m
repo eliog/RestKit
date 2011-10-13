@@ -69,6 +69,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 	} else {
 		// Hostname
 		reachabilityRef = SCNetworkReachabilityCreateWithName(CFAllocatorGetDefault(), hostNameOrIPAddress);
+        hasNetworkAvailabilityBeenDetermined = NO;
 	}
 	
 	if (nil != reachabilityRef) {
