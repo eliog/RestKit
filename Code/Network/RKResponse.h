@@ -15,6 +15,7 @@
 	NSMutableData* _body;
 	NSError* _failureError;
 	BOOL _loading;
+    NSTimer* _loadTimer;
 }
 
 /**

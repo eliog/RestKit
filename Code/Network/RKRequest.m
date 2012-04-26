@@ -32,7 +32,8 @@
 		_connection = nil;
 		_isLoading = NO;
 		_isLoaded = NO;
-        [_URLRequest setTimeoutInterval: 300];
+        _fails = 0;
+        [_URLRequest setTimeoutInterval: 30];
 	}
 	return self;
 }
@@ -40,6 +41,7 @@
 - (id)initWithURL:(NSURL*)URL delegate:(id)delegate {
 	if (self = [self initWithURL:URL]) {
 		_delegate = delegate;
+        _fails = 0;
 	}
 	return self;
 }
@@ -201,6 +203,23 @@
 	[_connection release];
 	_connection = nil;
 	_isLoading = NO;
+}
+
+-(void)cancelAndError: (NSString*) message {
+    [_connection cancel];
+    [_connection release];
+    _connection = nil;
+    _fails++;
+    if (_fails > 1) {
+        NSMutableDictionary* details = [NSMutableDictionary dictionary];
+        [details setValue:message forKey:NSLocalizedDescriptionKey];
+        // populate the error object with the details
+        NSError* error = [NSError errorWithDomain:@"world" code:200 userInfo:details];
+        [self didFailLoadWithError: error];
+    } else {
+        _isLoading = NO;
+    }
+    
 }
 
 - (void)didFailLoadWithError:(NSError*)error {

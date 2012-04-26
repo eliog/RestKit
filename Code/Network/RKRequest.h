@@ -37,6 +37,7 @@ typedef enum RKRequestMethod {
 	RKRequestMethod _method;
 	BOOL _isLoading;
 	BOOL _isLoaded;
+    int _fails;
 }
 
 /**

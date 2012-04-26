@@ -29,6 +29,9 @@
 		// We don't retain here as we're letting RKRequestQueue manage
 		// request ownership
 		_request = request;
+        _loading = NO;
+        _loadTimer = [NSTimer scheduledTimerWithTimeInterval: 5.0 target:self selector:@selector(timerTick) userInfo:nil repeats: NO];
+        [_loadTimer retain];
 	}
 
 	return self;
@@ -43,15 +46,29 @@
 		_failureError = [error retain];
 		_body = [body retain];
 		_loading = NO;
+        _loadTimer = [NSTimer scheduledTimerWithTimeInterval: 5.0 target:self selector:@selector(timerTick) userInfo:nil repeats: NO];
+        [_loadTimer retain];
+
 	}
 
 	return self;
+}
+
+-(void) timerTick {
+    if (!_loading) {
+        NSLog(@"Got Request Timer Tick and have not loaded, so cancelling");
+        [_request cancelAndError: @"timeout trying to connect"];
+    } else {
+        NSLog(@"Got Request Timer Tick and already loading so all good");
+    }
 }
 
 - (void)dealloc {
 	[_httpURLResponse release];
 	[_body release];
 	[_failureError release];
+    [_loadTimer invalidate];
+    [_loadTimer release];
 	[super dealloc];
 }
 
@@ -71,7 +88,7 @@
 
 - (void)dispatchRequestDidStartLoadIfNecessary {
 	if (NO == _loading) {
-		_loading = YES;
+        _loading = YES;
 		if ([[_request delegate] respondsToSelector:@selector(requestDidStartLoad:)]) {
 			[[_request delegate] requestDidStartLoad:_request];
 		}
@@ -89,11 +106,13 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
 	[_request didFinishLoad:self];
+     [_loadTimer invalidate];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
 	_failureError = [error retain];
 	[_request didFailLoadWithError:_failureError];
+    [_loadTimer invalidate];
 }
 
 // In the event that the url request is a post, this delegate method will be called before
