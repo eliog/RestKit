@@ -97,7 +97,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 
 - (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[self unscheduleObserver];
+	     [self unscheduleObserver];
 	if (_reachabilityRef) {
 		CFRelease(_reachabilityRef);
 	}

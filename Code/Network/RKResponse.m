@@ -9,6 +9,7 @@
 #import "RKResponse.h"
 #import "RKNotifications.h"
 #import "RKJSONParser.h"
+#define NSLog(__FORMAT__, ...) TFLog((@"%s [Line %d] " __FORMAT__), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 
 @implementation RKResponse
 
@@ -57,7 +58,11 @@
 -(void) timerTick {
     if (!_loading) {
         NSLog(@"Got Request Timer Tick and have not loaded, so cancelling");
-        [_request cancelAndError: @"timeout trying to connect"];
+        if ([_request.HTTPMethod isEqualToString:@"GET"]) {
+            NSLog(@"This is a GET request so I'll keep waiting...");
+        } else {
+            [_request cancelAndError: @"timeout trying to connect"];
+        }
     } else {
         NSLog(@"Got Request Timer Tick and already loading so all good");
     }
