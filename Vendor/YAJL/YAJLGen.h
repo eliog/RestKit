@@ -59,7 +59,7 @@ typedef NSUInteger YAJLGenOptions;
  - NSURL -> URL (absolute) string 
  */
 @interface YAJLGen : NSObject {
-  yajl_gen gen_;
+  rk_yajl_gen gen_;
   
   YAJLGenOptions genOptions_;
 }

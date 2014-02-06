@@ -28,10 +28,10 @@
 # IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-SET (SRCS yajl.c yajl_lex.c yajl_parser.c yajl_buf.c
-          yajl_encode.c yajl_gen.c yajl_alloc.c)
-SET (HDRS yajl_parser.h yajl_lex.h yajl_buf.h yajl_encode.h yajl_alloc.h)
-SET (PUB_HDRS api/yajl_parse.h api/yajl_gen.h api/yajl_common.h)
+SET (SRCS rk_yajl.c rk_yajl_lex.c rk_yajl_parser.c rk_yajl_buf.c
+          rk_yajl_encode.c rk_yajl_gen.c rk_yajl_alloc.c)
+SET (HDRS rk_yajl_parser.h rk_yajl_lex.h rk_yajl_buf.h rk_yajl_encode.h rk_yajl_alloc.h)
+SET (PUB_HDRS api/rk_yajl_parse.h api/rk_yajl_gen.h api/rk_yajl_common.h)
 
 # useful when fixing lexer bugs.
 #ADD_DEFINITIONS(-DYAJL_LEXER_DEBUG)
@@ -43,17 +43,17 @@ ADD_DEFINITIONS(-DYAJL_BUILD)
 
 # set up some paths
 SET (libDir ${CMAKE_CURRENT_BINARY_DIR}/../${YAJL_DIST_NAME}/lib)
-SET (incDir ${CMAKE_CURRENT_BINARY_DIR}/../${YAJL_DIST_NAME}/include/yajl)
+SET (incDir ${CMAKE_CURRENT_BINARY_DIR}/../${YAJL_DIST_NAME}/include/rk_yajl)
 
 # set the output path for libraries
 SET(LIBRARY_OUTPUT_PATH ${libDir})
 
-ADD_LIBRARY(yajl_s STATIC ${SRCS} ${HDRS} ${PUB_HDRS})
+ADD_LIBRARY(rk_yajl_s STATIC ${SRCS} ${HDRS} ${PUB_HDRS})
 
-ADD_LIBRARY(yajl SHARED ${SRCS} ${HDRS} ${PUB_HDRS})
+ADD_LIBRARY(rk_yajl SHARED ${SRCS} ${HDRS} ${PUB_HDRS})
 
 #### setup shared library version number
-SET_TARGET_PROPERTIES(yajl PROPERTIES
+SET_TARGET_PROPERTIES(rk_yajl PROPERTIES
                       DEFINE_SYMBOL YAJL_SHARED
                       SOVERSION ${YAJL_MAJOR}
                       VERSION ${YAJL_MAJOR}.${YAJL_MINOR}.${YAJL_MICRO})
@@ -70,14 +70,14 @@ FOREACH (header ${PUB_HDRS})
 
   EXEC_PROGRAM(${CMAKE_COMMAND} ARGS -E copy_if_different ${header} ${incDir})
 
-  ADD_CUSTOM_COMMAND(TARGET yajl_s POST_BUILD
+  ADD_CUSTOM_COMMAND(TARGET rk_yajl_s POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_if_different ${header} ${incDir})
 ENDFOREACH (header ${PUB_HDRS})
 
 INCLUDE_DIRECTORIES(${incDir}/..)
 
 IF(NOT WIN32)
-  INSTALL(TARGETS yajl LIBRARY DESTINATION lib)
-  INSTALL(TARGETS yajl_s ARCHIVE DESTINATION lib)
-  INSTALL(DIRECTORY api/ DESTINATION include/yajl)
+  INSTALL(TARGETS rk_yajl LIBRARY DESTINATION lib)
+  INSTALL(TARGETS rk_yajl_s ARCHIVE DESTINATION lib)
+  INSTALL(DIRECTORY api/ DESTINATION include/rk_yajl)
 ENDIF()

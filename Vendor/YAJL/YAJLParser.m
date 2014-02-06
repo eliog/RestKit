@@ -73,7 +73,7 @@ NSString *const YAJLParserValueKey = @"YAJLParserValueKey";
 
 - (void)dealloc {
   if (handle_ != NULL) {
-    yajl_free(handle_);
+    rk_yajl_free(handle_);
     handle_ = NULL;
   } 
   
@@ -95,29 +95,29 @@ NSString *const YAJLParserValueKey = @"YAJLParserValueKey";
 
 #pragma mark YAJL Callbacks
 
-int yajl_null(void *ctx) {
+int rk_yajl_null(void *ctx) {
   [(id)ctx _add:[NSNull null]];
   return 1;
 }
 
-int yajl_boolean(void *ctx, int boolVal) {
+int rk_yajl_boolean(void *ctx, int boolVal) {
   NSNumber *number = [[NSNumber alloc] initWithBool:(BOOL)boolVal];
   [(id)ctx _add:number];
   [number release];
   return 1;
 }
 
-// Instead of using yajl_integer, and yajl_double we use yajl_number and parse
+// Instead of using rk_yajl_integer, and rk_yajl_double we use rk_yajl_number and parse
 // as double (or long long); This is to be more compliant since Javascript numbers are represented
 // as double precision floating point, though JSON spec doesn't define a max value 
 // and is up to the parser?
 
-//int yajl_integer(void *ctx, long integerVal) {
+//int rk_yajl_integer(void *ctx, long integerVal) {
 //  [(id)ctx _add:[NSNumber numberWithLong:integerVal]];
 //  return 1;
 //}
 //
-//int yajl_double(void *ctx, double doubleVal) {
+//int rk_yajl_double(void *ctx, double doubleVal) {
 //  [(id)ctx _add:[NSNumber numberWithDouble:doubleVal]];
 //  return 1;
 //}
@@ -136,7 +136,7 @@ int ParseDouble(void *ctx, const char *buf, const char *numberVal, unsigned int 
   return 1;
 }
 
-int yajl_number(void *ctx, const char *numberVal, unsigned int numberLen) {
+int rk_yajl_number(void *ctx, const char *numberVal, unsigned int numberLen) {
   char buf[numberLen+1];
   memcpy(buf, numberVal, numberLen);
   buf[numberLen] = 0;
@@ -164,52 +164,52 @@ int yajl_number(void *ctx, const char *numberVal, unsigned int numberLen) {
   return 1;
 }
 
-int yajl_string(void *ctx, const unsigned char *stringVal, unsigned int stringLen) {
+int rk_yajl_string(void *ctx, const unsigned char *stringVal, unsigned int stringLen) {
   NSString *s = [[NSString alloc] initWithBytes:stringVal length:stringLen encoding:NSUTF8StringEncoding];
   [(id)ctx _add:s];
   [s release];
   return 1;
 }
 
-int yajl_map_key(void *ctx, const unsigned char *stringVal, unsigned int stringLen) {
+int rk_yajl_map_key(void *ctx, const unsigned char *stringVal, unsigned int stringLen) {
   NSString *s = [[NSString alloc] initWithBytes:stringVal length:stringLen encoding:NSUTF8StringEncoding];
   [(id)ctx _mapKey:s];
   [s release];
   return 1;
 }
 
-int yajl_start_map(void *ctx) {
+int rk_yajl_start_map(void *ctx) {
   [(id)ctx _startDictionary];
   return 1;
 }
 
-int yajl_end_map(void *ctx) {
+int rk_yajl_end_map(void *ctx) {
   [(id)ctx _endDictionary];
   return 1;
 }
 
-int yajl_start_array(void *ctx) {
+int rk_yajl_start_array(void *ctx) {
   [(id)ctx _startArray];
   return 1;
 }
 
-int yajl_end_array(void *ctx) {
+int rk_yajl_end_array(void *ctx) {
   [(id)ctx _endArray];
   return 1;
 }
 
-static yajl_callbacks callbacks = {
-yajl_null,
-yajl_boolean,
-NULL, // yajl_integer (using yajl_number)
-NULL, // yajl_double (using yajl_number)
-yajl_number,
-yajl_string,
-yajl_start_map,
-yajl_map_key,
-yajl_end_map,
-yajl_start_array,
-yajl_end_array
+static rk_yajl_callbacks callbacks = {
+rk_yajl_null,
+rk_yajl_boolean,
+NULL, // rk_yajl_integer (using rk_yajl_number)
+NULL, // rk_yajl_double (using rk_yajl_number)
+rk_yajl_number,
+rk_yajl_string,
+rk_yajl_start_map,
+rk_yajl_map_key,
+rk_yajl_end_map,
+rk_yajl_start_array,
+rk_yajl_end_array
 };
 
 #pragma mark -
@@ -240,33 +240,33 @@ yajl_end_array
 
 - (YAJLParserStatus)parse:(NSData *)data {
   if (!handle_) {
-    yajl_parser_config cfg = {
+    rk_yajl_parser_config cfg = {
       ((parserOptions_ & YAJLParserOptionsAllowComments) ? 1 : 0), // allowComments: if nonzero, javascript style comments will be allowed in the input (both /* */ and //)
       ((parserOptions_ & YAJLParserOptionsCheckUTF8) ? 1 : 0)  // checkUTF8: if nonzero, invalid UTF8 strings will cause a parse error
     };
     
-    handle_ = yajl_alloc(&callbacks, &cfg, NULL, self);
+    handle_ = rk_yajl_alloc(&callbacks, &cfg, NULL, self);
     if (!handle_) { 
       self.parserError = [self _errorForStatus:YAJLParserErrorCodeAllocError message:@"Unable to allocate YAJL handle" value:nil];
       return YAJLParserStatusError;
     } 
   }
   
-  yajl_status status = yajl_parse(handle_, [data bytes], [data length]);
-  if (status == yajl_status_client_canceled) {
+  rk_yajl_status status = rk_yajl_parse(handle_, [data bytes], [data length]);
+  if (status == rk_yajl_status_client_canceled) {
     // We cancelled because we encountered an error here in the client;
     // and parserError should be already set
     NSAssert(self.parserError, @"Client cancelled, but we have no parserError set");
     return YAJLParserStatusError;
-  } else if (status == yajl_status_error) {
-    unsigned char *errorMessage = yajl_get_error(handle_, 1, [data bytes], [data length]);
+  } else if (status == rk_yajl_status_error) {
+    unsigned char *errorMessage = rk_yajl_get_error(handle_, 1, [data bytes], [data length]);
     NSString *errorString = [NSString stringWithUTF8String:(char *)errorMessage];
     self.parserError = [self _errorForStatus:status message:errorString value:nil];
-    yajl_free_error(handle_, errorMessage);
+    rk_yajl_free_error(handle_, errorMessage);
     return YAJLParserStatusError;
-  } else if (status == yajl_status_insufficient_data) {
+  } else if (status == rk_yajl_status_insufficient_data) {
     return YAJLParserStatusInsufficientData;
-  } else if (status == yajl_status_ok) {
+  } else if (status == rk_yajl_status_ok) {
     return YAJLParserStatusOK;
   } else {
     self.parserError = [self _errorForStatus:status message:[NSString stringWithFormat:@"Unexpected status %d", status] value:nil];

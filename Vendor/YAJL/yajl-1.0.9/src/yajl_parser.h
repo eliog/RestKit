@@ -39,43 +39,43 @@
 
 
 typedef enum {
-    yajl_state_start = 0,
-    yajl_state_parse_complete,
-    yajl_state_parse_error,
-    yajl_state_lexical_error,
-    yajl_state_map_start,
-    yajl_state_map_sep,    
-    yajl_state_map_need_val,
-    yajl_state_map_got_val,
-    yajl_state_map_need_key,
-    yajl_state_array_start,
-    yajl_state_array_got_val,
-    yajl_state_array_need_val
-} yajl_state;
+    rk_yajl_state_start = 0,
+    rk_yajl_state_parse_complete,
+    rk_yajl_state_parse_error,
+    rk_yajl_state_lexical_error,
+    rk_yajl_state_map_start,
+    rk_yajl_state_map_sep,    
+    rk_yajl_state_map_need_val,
+    rk_yajl_state_map_got_val,
+    rk_yajl_state_map_need_key,
+    rk_yajl_state_array_start,
+    rk_yajl_state_array_got_val,
+    rk_yajl_state_array_need_val
+} rk_yajl_state;
 
-struct yajl_handle_t {
-    const yajl_callbacks * callbacks;
+struct rk_yajl_handle_t {
+    const rk_yajl_callbacks * callbacks;
     void * ctx;
-    yajl_lexer lexer;
+    rk_yajl_lexer lexer;
     const char * parseError;
     /* the number of bytes consumed from the last client buffer,
      * in the case of an error this will be an error offset, in the
      * case of an error this can be used as the error offset */
     unsigned int bytesConsumed;
     /* temporary storage for decoded strings */
-    yajl_buf decodeBuf;
-    /* a stack of states.  access with yajl_state_XXX routines */
-    yajl_bytestack stateStack;
+    rk_yajl_buf decodeBuf;
+    /* a stack of states.  access with rk_yajl_state_XXX routines */
+    rk_yajl_bytestack stateStack;
     /* memory allocation routines */
-    yajl_alloc_funcs alloc;
+    rk_yajl_alloc_funcs alloc;
 };
 
-yajl_status
-yajl_do_parse(yajl_handle handle, const unsigned char * jsonText,
+rk_yajl_status
+rk_yajl_do_parse(rk_yajl_handle handle, const unsigned char * jsonText,
               unsigned int jsonTextLen);
 
 unsigned char *
-yajl_render_error_string(yajl_handle hand, const unsigned char * jsonText,
+rk_yajl_render_error_string(rk_yajl_handle hand, const unsigned char * jsonText,
                          unsigned int jsonTextLen, int verbose);
 
 

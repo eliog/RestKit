@@ -1,11 +1,11 @@
 1.0.9
-     * lth - fix inverted logic causing yajl_gen_double() to always fail on
+     * lth - fix inverted logic causing rk_yajl_gen_double() to always fail on
 	win32 (thanks to Fredrik Kihlander for the report) 
 
 1.0.8
      * Randall E. Barker - move dllexport defnitions so dlls with proper
 	exports can again be generated on windows 
-     * lth - add yajl_get_bytes_consumed() which allows the client to
+     * lth - add rk_yajl_get_bytes_consumed() which allows the client to
 	determine the offset as an error, as well as determine how
 	many bytes of an input buffer were consumed.
      * lth - fixes to keep "error offset" up to date (like when the
@@ -18,7 +18,7 @@
 
 1.0.6
      * lth fix several compiler warnings
-     * lth fix generation of invalid json from yajl_gen_double
+     * lth fix generation of invalid json from rk_yajl_gen_double
 	(NaN is not JSON)
      * jstamp support for combining short options in tools
      * jstamp exit properly on errors from tools
@@ -51,7 +51,7 @@
 	contribution.
      * lth client may override allocation routines at generator or parser
 	allocation time
-     * tjw add yajl_parse_complete routine to allow client to explicitly
+     * tjw add rk_yajl_parse_complete routine to allow client to explicitly
 	specify end-of-input, solving the "lonely number" case, where
 	json text consists only of an element with no explicit syntactic
 	end.
@@ -61,16 +61,16 @@
 	compilation warnings on 64 bit linux
 	
 0.4.0
-     * lth buffer overflow bug in yajl_gen_double s/%lf/%g/ - thanks to
+     * lth buffer overflow bug in rk_yajl_gen_double s/%lf/%g/ - thanks to
 	Eric Bergstrome
-     * lth yajl_number callback to allow passthrough of arbitrary precision
+     * lth rk_yajl_number callback to allow passthrough of arbitrary precision
 	numbers to client.  Thanks to Hatem Nassrat.
-     * lth yajl_integer now deals in long, instead of long long.  This
-	combined with yajl_number improves compiler compatibility while
+     * lth rk_yajl_integer now deals in long, instead of long long.  This
+	combined with rk_yajl_number improves compiler compatibility while
 	maintaining precision.
      * lth better ./configure && make experience (still requires cmake and
 	ruby)
-     * lth fix handling of special characters hex 0F and 1F in yajl_encode
+     * lth fix handling of special characters hex 0F and 1F in rk_yajl_encode
 	(thanks to Robert Geiger)
      * lth allow leading zeros in exponents (thanks to Hatem Nassrat)
     
@@ -84,10 +84,10 @@
 	parameter to scanf to zero.
      * lth all tests run 32x with ranging buffer sizes to stress stream
         parsing
-     * lth yajl_test accepts -b option to allow read buffer size to be
+     * lth rk_yajl_test accepts -b option to allow read buffer size to be
         set
      * lth option to validate UTF8 added to parser (argument in
-        yajl_parser_cfg)
+        rk_yajl_parser_cfg)
      * lth fix buffer overrun when chunk ends inside \u escaped text
      * lth support client cancelation
 
@@ -95,7 +95,7 @@
      * lth on windows build debug with C7 symbols and no pdb files.
         
 0.2.1
-     * fix yajl_reformat and yajl_verify to work on arbitrarily sized
+     * fix rk_yajl_reformat and rk_yajl_verify to work on arbitrarily sized
         inputs.
      * fix win32 build break, clean up all errors and warnings.
      * fix optimized build flags.

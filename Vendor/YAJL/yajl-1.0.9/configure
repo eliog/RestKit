@@ -54,7 +54,7 @@ puts "== running CMake in build directory"
 FileUtils.mkdir("build")
 FileUtils.cd("build") do 
   if (!system("cmake -DCMAKE_INSTALL_PREFIX='#{prefix}' .."))
-    puts "The \"cmake\" program is required to configure yajl.  It's"
+    puts "The \"cmake\" program is required to configure rk_yajl.  It's"
     puts "available from most ports/packaging systems and http://cmake.org"
     exit 1
   end
@@ -80,14 +80,14 @@ File.open("Makefile", "w+") do |f|
   f.puts
   f.puts "distclean:"  
   f.puts "	@rm -rf Makefile build"
-  f.puts "	@rm -f yajl-*.tgz"
+  f.puts "	@rm -f rk_yajl-*.tgz"
   f.puts
   f.puts "install: all" 
   f.puts "	@cd build && make install"
   f.puts
   f.puts "package: all"
-  f.puts "	@echo \"compressing to `basename build/yajl-*`.tgz\""
-  f.puts "	@cd build && tar czf ../`basename yajl-*`.tgz yajl-*"
+  f.puts "	@echo \"compressing to `basename build/rk_yajl-*`.tgz\""
+  f.puts "	@cd build && tar czf ../`basename rk_yajl-*`.tgz rk_yajl-*"
 end
 
 puts "== Configured with installation prefix: #{prefix}"

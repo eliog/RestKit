@@ -44,30 +44,30 @@
  */
 
 /**
- * yajl_buf is a buffer with exponential growth.  the buffer ensures that
+ * rk_yajl_buf is a buffer with exponential growth.  the buffer ensures that
  * you are always null padded.
  */
-typedef struct yajl_buf_t * yajl_buf;
+typedef struct rk_yajl_buf_t * rk_yajl_buf;
 
 /* allocate a new buffer */
-yajl_buf yajl_buf_alloc(yajl_alloc_funcs * alloc);
+rk_yajl_buf rk_yajl_buf_alloc(rk_yajl_alloc_funcs * alloc);
 
 /* free the buffer */
-void yajl_buf_free(yajl_buf buf);
+void rk_yajl_buf_free(rk_yajl_buf buf);
 
 /* append a number of bytes to the buffer */
-void yajl_buf_append(yajl_buf buf, const void * data, unsigned int len);
+void rk_yajl_buf_append(rk_yajl_buf buf, const void * data, unsigned int len);
 
 /* empty the buffer */
-void yajl_buf_clear(yajl_buf buf);
+void rk_yajl_buf_clear(rk_yajl_buf buf);
 
 /* get a pointer to the beginning of the buffer */
-const unsigned char * yajl_buf_data(yajl_buf buf);
+const unsigned char * rk_yajl_buf_data(rk_yajl_buf buf);
 
 /* get the length of the buffer */
-unsigned int yajl_buf_len(yajl_buf buf);
+unsigned int rk_yajl_buf_len(rk_yajl_buf buf);
 
 /* truncate the buffer */
-void yajl_buf_truncate(yajl_buf buf, unsigned int len);
+void rk_yajl_buf_truncate(rk_yajl_buf buf, unsigned int len);
 
 #endif

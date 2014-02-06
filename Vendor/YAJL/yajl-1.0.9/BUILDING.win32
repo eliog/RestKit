@@ -6,7 +6,7 @@ build the software and by specifying a generator explicitly at cmake:
 3. cd build
 4. cmake ..
 5. devenv YetAnotherJSONParser.sln /project ALL_BUILD /build Release
-6. build output is left in build/yajl-X.Y.Z
+6. build output is left in build/rk_yajl-X.Y.Z
 
 Earlier versions of visual studio have not been tested, but should 
 work without any major issues.

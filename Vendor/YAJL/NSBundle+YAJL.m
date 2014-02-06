@@ -33,15 +33,15 @@
 
 @implementation NSBundle (YAJL)
 
-- (id)yajl_JSONFromResource:(NSString *)resource {
+- (id)rk_yajl_JSONFromResource:(NSString *)resource {
   NSError *error = nil;
-  id JSONValue = [self yajl_JSONFromResource:resource options:YAJLParserOptionsNone error:&error];
+  id JSONValue = [self rk_yajl_JSONFromResource:resource options:YAJLParserOptionsNone error:&error];
   if (error) [NSException raise:YAJLParserException format:[error localizedDescription], nil];
   return JSONValue;
 }
 
-- (id)yajl_JSONFromResource:(NSString *)resource options:(YAJLParserOptions)options error:(NSError **)error {
-  return [[self yajl_gh_loadStringDataFromResource:resource] yajl_JSONWithOptions:YAJLParserOptionsAllowComments error:error];
+- (id)rk_yajl_JSONFromResource:(NSString *)resource options:(YAJLParserOptions)options error:(NSError **)error {
+  return [[self rk_yajl_gh_loadStringDataFromResource:resource] rk_yajl_JSONWithOptions:YAJLParserOptionsAllowComments error:error];
 }
 
 @end

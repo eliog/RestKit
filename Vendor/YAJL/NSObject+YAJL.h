@@ -41,7 +41,7 @@
  Otherwise throws YAJLGenInvalidObjectException.
  @result JSON String
  */
-- (NSString *)yajl_JSONString;
+- (NSString *)rk_yajl_JSONString;
 
 /*!
  Create JSON string from object.
@@ -52,7 +52,7 @@
  @param indentString
  @result JSON String
  */
-- (NSString *)yajl_JSONStringWithOptions:(YAJLGenOptions)options indentString:(NSString *)indentString;
+- (NSString *)rk_yajl_JSONStringWithOptions:(YAJLGenOptions)options indentString:(NSString *)indentString;
 
 
 #pragma mark Parsing
@@ -65,13 +65,13 @@
  
  @code
  NSString *JSONString = @"{'foo':['bar', true]}";
- id JSONValue = [JSONString yajl_JSON];
+ id JSONValue = [JSONString rk_yajl_JSON];
  
  NSData *JSONData = ...;
- id JSONValue = [JSONData yajl_JSON];
+ id JSONValue = [JSONData rk_yajl_JSON];
  @endcode
  */
-- (id)yajl_JSON;
+- (id)rk_yajl_JSON;
 
 /*!
  Parse JSON (NSString or NSData or dataUsingEncoding:) with out error.
@@ -87,11 +87,11 @@
  @code
  NSString *JSONString = @"{'foo':['bar', true]}";
  NSError *error = nil;
- [JSONString yajl_JSON:error];
+ [JSONString rk_yajl_JSON:error];
  if (error) ...;
  @endcode
  */
-- (id)yajl_JSON:(NSError **)error;
+- (id)rk_yajl_JSON:(NSError **)error;
 
 /*!
  Parse JSON (NSString or NSData or dataUsingEncoding:) with options and out error.
@@ -108,11 +108,11 @@
  @code
  NSString *JSONString = @"{'foo':['bar', true]} // comment";
  NSError *error = nil;
- [JSONString yajl_JSONWithOptions:YAJLParserOptionsAllowComments error:error];
+ [JSONString rk_yajl_JSONWithOptions:YAJLParserOptionsAllowComments error:error];
  if (error) ...;
  @endcode
  */
-- (id)yajl_JSONWithOptions:(YAJLParserOptions)options error:(NSError **)error;
+- (id)rk_yajl_JSONWithOptions:(YAJLParserOptions)options error:(NSError **)error;
 
 @end
 

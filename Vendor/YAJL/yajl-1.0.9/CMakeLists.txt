@@ -36,7 +36,7 @@ SET (YAJL_MAJOR 1)
 SET (YAJL_MINOR 0)
 SET (YAJL_MICRO 10)
 
-SET (YAJL_DIST_NAME "yajl-${YAJL_MAJOR}.${YAJL_MINOR}.${YAJL_MICRO}")
+SET (YAJL_DIST_NAME "rk_yajl-${YAJL_MAJOR}.${YAJL_MINOR}.${YAJL_MICRO}")
 
 IF (NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE "Release")
@@ -78,6 +78,6 @@ INCLUDE(YAJLDoc.cmake)
 
 # a test target
 ADD_CUSTOM_TARGET(test
-                  ./run_tests.sh ${CMAKE_CURRENT_BINARY_DIR}/test/yajl_test
+                  ./run_tests.sh ${CMAKE_CURRENT_BINARY_DIR}/test/rk_yajl_test
                   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test)
 

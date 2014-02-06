@@ -41,17 +41,17 @@ NSString *const YAJLGenInvalidObjectException = @"YAJLGenInvalidObjectException"
 - (id)initWithGenOptions:(YAJLGenOptions)genOptions indentString:(NSString *)indentString {
   if ((self = [super init])) {
     genOptions_ = genOptions;
-    yajl_gen_config cfg = { 
+    rk_yajl_gen_config cfg = { 
       ((genOptions & YAJLGenOptionsBeautify) ? 1 : 0),
       [indentString UTF8String]
     };    
-    gen_ = yajl_gen_alloc(&cfg, NULL);    
+    gen_ = rk_yajl_gen_alloc(&cfg, NULL);    
   }
   return self;
 }
 
 - (void)dealloc { 
-  if (gen_ != NULL) yajl_gen_free(gen_);
+  if (gen_ != NULL) rk_yajl_gen_free(gen_);
   [super dealloc];
 }
 
@@ -112,50 +112,50 @@ NSString *const YAJLGenInvalidObjectException = @"YAJLGenInvalidObjectException"
 }
 
 - (void)null {
-  yajl_gen_null(gen_);
+  rk_yajl_gen_null(gen_);
 }
 
 - (void)bool:(BOOL)b {
-  yajl_gen_bool(gen_, b);
+  rk_yajl_gen_bool(gen_, b);
 }
 
 - (void)number:(NSNumber *)number {
   NSString *s = [number stringValue];
   unsigned int length = [s lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
   const char *c = [s UTF8String];
-  yajl_gen_number(gen_, c, length);
+  rk_yajl_gen_number(gen_, c, length);
 }
 
 - (void)string:(NSString *)s {
   unsigned int length = [s lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
   const unsigned char *c = (const unsigned char *)[s UTF8String]; 
-  yajl_gen_string(gen_, c, length);
+  rk_yajl_gen_string(gen_, c, length);
 }
 
 - (void)startDictionary {
-  yajl_gen_map_open(gen_);
+  rk_yajl_gen_map_open(gen_);
 }
 
 - (void)endDictionary {
-  yajl_gen_map_close(gen_);
+  rk_yajl_gen_map_close(gen_);
 }
 
 - (void)startArray {
-  yajl_gen_array_open(gen_);
+  rk_yajl_gen_array_open(gen_);
 }
 
 - (void)endArray {
-  yajl_gen_array_close(gen_);
+  rk_yajl_gen_array_close(gen_);
 }
 
 - (void)clear {
-  yajl_gen_clear(gen_);
+  rk_yajl_gen_clear(gen_);
 }
 
 - (NSString *)buffer {
   const unsigned char *buf;  
   unsigned int len;
-  yajl_gen_get_buf(gen_, &buf, &len); 
+  rk_yajl_gen_get_buf(gen_, &buf, &len); 
   NSString *s = [NSString stringWithUTF8String:(const char*)buf]; 
   return s;
 } 

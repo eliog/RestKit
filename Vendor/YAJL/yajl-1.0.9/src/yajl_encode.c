@@ -45,14 +45,14 @@ static void CharToHex(unsigned char c, char * hexBuf)
 }
 
 void
-yajl_string_encode(yajl_buf buf, const unsigned char * str,
+rk_yajl_string_encode(rk_yajl_buf buf, const unsigned char * str,
                    unsigned int len)
 {
-    yajl_string_encode2((const yajl_print_t) &yajl_buf_append, buf, str, len);
+    rk_yajl_string_encode2((const rk_yajl_print_t) &rk_yajl_buf_append, buf, str, len);
 }
 
 void
-yajl_string_encode2(const yajl_print_t print,
+rk_yajl_string_encode2(const rk_yajl_print_t print,
                     void * ctx,
                     const unsigned char * str,
                     unsigned int len)
@@ -130,7 +130,7 @@ static void Utf32toUtf8(unsigned int codepoint, char * utf8Buf)
     }
 }
 
-void yajl_string_decode(yajl_buf buf, const unsigned char * str,
+void rk_yajl_string_decode(rk_yajl_buf buf, const unsigned char * str,
                         unsigned int len)
 {
     unsigned int beg = 0;
@@ -140,7 +140,7 @@ void yajl_string_decode(yajl_buf buf, const unsigned char * str,
         if (str[end] == '\\') {
             char utf8Buf[5];
             const char * unescaped = "?";
-            yajl_buf_append(buf, str + beg, end - beg);
+            rk_yajl_buf_append(buf, str + beg, end - beg);
             switch (str[++end]) {
                 case 'r': unescaped = "\r"; break;
                 case 'n': unescaped = "\n"; break;
@@ -178,11 +178,11 @@ void yajl_string_decode(yajl_buf buf, const unsigned char * str,
                 default:
                     assert("this should never happen" == NULL);
             }
-            yajl_buf_append(buf, unescaped, strlen(unescaped));
+            rk_yajl_buf_append(buf, unescaped, strlen(unescaped));
             beg = ++end;
         } else {
             end++;
         }
     }
-    yajl_buf_append(buf, str + beg, end - beg);
+    rk_yajl_buf_append(buf, str + beg, end - beg);
 }

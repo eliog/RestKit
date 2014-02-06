@@ -13,7 +13,7 @@
 
 - (NSDictionary*)objectFromString:(NSString*)string {
 	NSError* error = nil;
-	NSDictionary* json = [string yajl_JSON:&error];
+	NSDictionary* json = [string rk_yajl_JSON:&error];
 	if (error) {
 		NSLog(@"Encountered error: %@ parsing json strong: %@", error, string);
 	}
@@ -21,7 +21,7 @@
 }
 
 - (NSString*)stringFromObject:(id)object {
-	return [object yajl_JSONString];
+	return [object rk_yajl_JSONString];
 }
 
 @end

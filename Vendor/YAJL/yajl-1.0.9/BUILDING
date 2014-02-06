@@ -13,7 +13,7 @@ OR, attain CMake and build by hand:
 2. cd build
 3. cmake ..
 4. make 
-5. build output left in yajl-X.Y.Z
+5. build output left in rk_yajl-X.Y.Z
 
 best,
 lloyd

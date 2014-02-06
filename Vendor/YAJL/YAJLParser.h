@@ -96,7 +96,7 @@ typedef NSUInteger YAJLParserStatus;
 
 @interface YAJLParser : NSObject {
   
-  yajl_handle handle_;
+  rk_yajl_handle handle_;
   
   __weak id <YAJLParserDelegate> delegate_; // weak
     

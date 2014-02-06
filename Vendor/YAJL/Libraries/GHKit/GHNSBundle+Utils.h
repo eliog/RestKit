@@ -13,20 +13,20 @@
  @param resource Name of resource
  @result NSData
  */
-- (NSData *)yajl_gh_loadDataFromResource:(NSString *)resource;
+- (NSData *)rk_yajl_gh_loadDataFromResource:(NSString *)resource;
 
 /*!
  Load string data from resource.
  @param resource Name of resource
  @result NSString
  */
-- (NSString *)yajl_gh_loadStringDataFromResource:(NSString *)resource;
+- (NSString *)rk_yajl_gh_loadStringDataFromResource:(NSString *)resource;
 
 /*!
  Get URL for resource.
  @param resource Name of resource
  @result URL to resource
  */
-- (NSURL *)yajl_gh_URLForResource:(NSString *)resource;
+- (NSURL *)rk_yajl_gh_URLForResource:(NSString *)resource;
 
 @end

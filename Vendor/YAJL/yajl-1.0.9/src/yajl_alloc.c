@@ -31,35 +31,35 @@
  */ 
 
 /**
- * \file yajl_alloc.h
- * default memory allocation routines for yajl which use malloc/realloc and
+ * \file rk_yajl_alloc.h
+ * default memory allocation routines for rk_yajl which use malloc/realloc and
  * free
  */
 
 #include "yajl_alloc.h"
 #include <stdlib.h>
 
-static void * yajl_internal_malloc(void *ctx, unsigned int sz)
+static void * rk_yajl_internal_malloc(void *ctx, unsigned int sz)
 {
     return malloc(sz);
 }
 
-static void * yajl_internal_realloc(void *ctx, void * previous,
+static void * rk_yajl_internal_realloc(void *ctx, void * previous,
                                     unsigned int sz)
 {
     return realloc(previous, sz);
 }
 
-static void yajl_internal_free(void *ctx, void * ptr)
+static void rk_yajl_internal_free(void *ctx, void * ptr)
 {
     free(ptr);
 }
 
-void yajl_set_default_alloc_funcs(yajl_alloc_funcs * yaf)
+void rk_yajl_set_default_alloc_funcs(rk_yajl_alloc_funcs * yaf)
 {
-    yaf->malloc = yajl_internal_malloc;
-    yaf->free = yajl_internal_free;
-    yaf->realloc = yajl_internal_realloc;
+    yaf->malloc = rk_yajl_internal_malloc;
+    yaf->free = rk_yajl_internal_free;
+    yaf->realloc = rk_yajl_internal_realloc;
     yaf->ctx = NULL;
 }
 

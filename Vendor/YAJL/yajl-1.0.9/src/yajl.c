@@ -40,36 +40,36 @@
 #include <assert.h>
 
 const char *
-yajl_status_to_string(yajl_status stat)
+rk_yajl_status_to_string(rk_yajl_status stat)
 {
     const char * statStr = "unknown";
     switch (stat) {
-        case yajl_status_ok:
+        case rk_yajl_status_ok:
             statStr = "ok, no error";
             break;
-        case yajl_status_client_canceled:
+        case rk_yajl_status_client_canceled:
             statStr = "client canceled parse";
             break;
-        case yajl_status_insufficient_data:
+        case rk_yajl_status_insufficient_data:
             statStr = "eof was met before the parse could complete";
             break;
-        case yajl_status_error:
+        case rk_yajl_status_error:
             statStr = "parse error";
             break;
     }
     return statStr;
 }
 
-yajl_handle
-yajl_alloc(const yajl_callbacks * callbacks,
-           const yajl_parser_config * config,
-           const yajl_alloc_funcs * afs,
+rk_yajl_handle
+rk_yajl_alloc(const rk_yajl_callbacks * callbacks,
+           const rk_yajl_parser_config * config,
+           const rk_yajl_alloc_funcs * afs,
            void * ctx)
 {
     unsigned int allowComments = 0;
     unsigned int validateUTF8 = 0;
-    yajl_handle hand = NULL;
-    yajl_alloc_funcs afsBuffer;
+    rk_yajl_handle hand = NULL;
+    rk_yajl_alloc_funcs afsBuffer;
     
     /* first order of business is to set up memory allocation routines */
     if (afs != NULL) {
@@ -78,14 +78,14 @@ yajl_alloc(const yajl_callbacks * callbacks,
             return NULL;
         }
     } else {
-        yajl_set_default_alloc_funcs(&afsBuffer);
+        rk_yajl_set_default_alloc_funcs(&afsBuffer);
         afs = &afsBuffer;
     }
 
-    hand = (yajl_handle) YA_MALLOC(afs, sizeof(struct yajl_handle_t));
+    hand = (rk_yajl_handle) YA_MALLOC(afs, sizeof(struct rk_yajl_handle_t));
 
     /* copy in pointers to allocation routines */
-    memcpy((void *) &(hand->alloc), (void *) afs, sizeof(yajl_alloc_funcs));
+    memcpy((void *) &(hand->alloc), (void *) afs, sizeof(rk_yajl_alloc_funcs));
 
     if (config != NULL) {
         allowComments = config->allowComments;
@@ -94,36 +94,36 @@ yajl_alloc(const yajl_callbacks * callbacks,
 
     hand->callbacks = callbacks;
     hand->ctx = ctx;
-    hand->lexer = yajl_lex_alloc(&(hand->alloc), allowComments, validateUTF8);
+    hand->lexer = rk_yajl_lex_alloc(&(hand->alloc), allowComments, validateUTF8);
     hand->bytesConsumed = 0;
-    hand->decodeBuf = yajl_buf_alloc(&(hand->alloc));
-    yajl_bs_init(hand->stateStack, &(hand->alloc));
+    hand->decodeBuf = rk_yajl_buf_alloc(&(hand->alloc));
+    rk_yajl_bs_init(hand->stateStack, &(hand->alloc));
 
-    yajl_bs_push(hand->stateStack, yajl_state_start);    
+    rk_yajl_bs_push(hand->stateStack, rk_yajl_state_start);    
 
     return hand;
 }
 
 void
-yajl_free(yajl_handle handle)
+rk_yajl_free(rk_yajl_handle handle)
 {
-    yajl_bs_free(handle->stateStack);
-    yajl_buf_free(handle->decodeBuf);
-    yajl_lex_free(handle->lexer);
+    rk_yajl_bs_free(handle->stateStack);
+    rk_yajl_buf_free(handle->decodeBuf);
+    rk_yajl_lex_free(handle->lexer);
     YA_FREE(&(handle->alloc), handle);
 }
 
-yajl_status
-yajl_parse(yajl_handle hand, const unsigned char * jsonText,
+rk_yajl_status
+rk_yajl_parse(rk_yajl_handle hand, const unsigned char * jsonText,
            unsigned int jsonTextLen)
 {
-    yajl_status status;
-    status = yajl_do_parse(hand, jsonText, jsonTextLen);
+    rk_yajl_status status;
+    status = rk_yajl_do_parse(hand, jsonText, jsonTextLen);
     return status;
 }
 
-yajl_status
-yajl_parse_complete(yajl_handle hand)
+rk_yajl_status
+rk_yajl_parse_complete(rk_yajl_handle hand)
 {
     /* The particular case we want to handle is a trailing number.
      * Further input consisting of digits could cause our interpretation
@@ -131,18 +131,18 @@ yajl_parse_complete(yajl_handle hand)
      * A very simple approach to this is to inject whitespace to terminate
      * any number in the lex buffer.
      */
-    return yajl_parse(hand, (const unsigned char *)" ", 1);
+    return rk_yajl_parse(hand, (const unsigned char *)" ", 1);
 }
 
 unsigned char *
-yajl_get_error(yajl_handle hand, int verbose,
+rk_yajl_get_error(rk_yajl_handle hand, int verbose,
                const unsigned char * jsonText, unsigned int jsonTextLen)
 {
-    return yajl_render_error_string(hand, jsonText, jsonTextLen, verbose);
+    return rk_yajl_render_error_string(hand, jsonText, jsonTextLen, verbose);
 }
 
 unsigned int
-yajl_get_bytes_consumed(yajl_handle hand)
+rk_yajl_get_bytes_consumed(rk_yajl_handle hand)
 {
     if (!hand) return 0;
     else return hand->bytesConsumed;
@@ -150,7 +150,7 @@ yajl_get_bytes_consumed(yajl_handle hand)
 
 
 void
-yajl_free_error(yajl_handle hand, unsigned char * str)
+rk_yajl_free_error(rk_yajl_handle hand, unsigned char * str)
 {
     /* use memory allocation functions if set */
     YA_FREE(&(hand->alloc), str);

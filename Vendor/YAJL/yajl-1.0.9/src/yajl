@@ -22,8 +22,8 @@ The following code sample is a complete JSON "reformating" program.  It
 demonstrates how to perform stream parsing and generation.  
 
 \code
-#include <yajl/yajl_parse.h>
-#include <yajl/yajl_gen.h>
+#include <rk_yajl/rk_yajl_parse.h>
+#include <rk_yajl/rk_yajl_gen.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,71 +31,71 @@ demonstrates how to perform stream parsing and generation.
 
 static int reformat_null(void * ctx)
 {
-    yajl_gen g = (yajl_gen) ctx;
-    yajl_gen_null(g);
+    rk_yajl_gen g = (rk_yajl_gen) ctx;
+    rk_yajl_gen_null(g);
     return 1;
 }
 
 static int reformat_boolean(void * ctx, int boolean)
 {
-    yajl_gen g = (yajl_gen) ctx;
-    yajl_gen_bool(g, boolean);
+    rk_yajl_gen g = (rk_yajl_gen) ctx;
+    rk_yajl_gen_bool(g, boolean);
     return 1;
 }
 
 static int reformat_number(void * ctx, const char * s, unsigned int l)
 {
-    yajl_gen g = (yajl_gen) ctx;
-    yajl_gen_number(g, s, l);
+    rk_yajl_gen g = (rk_yajl_gen) ctx;
+    rk_yajl_gen_number(g, s, l);
     return 1;
 }
 
 static int reformat_string(void * ctx, const unsigned char * stringVal,
                            unsigned int stringLen)
 {
-    yajl_gen g = (yajl_gen) ctx;
-    yajl_gen_string(g, stringVal, stringLen);
+    rk_yajl_gen g = (rk_yajl_gen) ctx;
+    rk_yajl_gen_string(g, stringVal, stringLen);
     return 1;
 }
 
 static int reformat_map_key(void * ctx, const unsigned char * stringVal,
                             unsigned int stringLen)
 {
-    yajl_gen g = (yajl_gen) ctx;
-    yajl_gen_string(g, stringVal, stringLen);
+    rk_yajl_gen g = (rk_yajl_gen) ctx;
+    rk_yajl_gen_string(g, stringVal, stringLen);
     return 1;
 }
 
 static int reformat_start_map(void * ctx)
 {
-    yajl_gen g = (yajl_gen) ctx;
-    yajl_gen_map_open(g);
+    rk_yajl_gen g = (rk_yajl_gen) ctx;
+    rk_yajl_gen_map_open(g);
     return 1;
 }
 
 
 static int reformat_end_map(void * ctx)
 {
-    yajl_gen g = (yajl_gen) ctx;
-    yajl_gen_map_close(g);
+    rk_yajl_gen g = (rk_yajl_gen) ctx;
+    rk_yajl_gen_map_close(g);
     return 1;
 }
 
 static int reformat_start_array(void * ctx)
 {
-    yajl_gen g = (yajl_gen) ctx;
-    yajl_gen_array_open(g);
+    rk_yajl_gen g = (rk_yajl_gen) ctx;
+    rk_yajl_gen_array_open(g);
     return 1;
 }
 
 static int reformat_end_array(void * ctx)
 {
-    yajl_gen g = (yajl_gen) ctx;
-    yajl_gen_array_close(g);
+    rk_yajl_gen g = (rk_yajl_gen) ctx;
+    rk_yajl_gen_array_close(g);
     return 1;
 }
 
-static yajl_callbacks callbacks = {
+static rk_yajl_callbacks callbacks = {
     reformat_null,
     reformat_boolean,
     NULL,
@@ -123,15 +123,15 @@ usage(const char * progname)
 int 
 main(int argc, char ** argv)
 {
-    yajl_handle hand;
+    rk_yajl_handle hand;
     static unsigned char fileData[65536];
     /* generator config */
-    yajl_gen_config conf = { 1, "  " };
-	yajl_gen g;
-    yajl_status stat;
+    rk_yajl_gen_config conf = { 1, "  " };
+	rk_yajl_gen g;
+    rk_yajl_status stat;
     size_t rd;
     /* allow comments */
-    yajl_parser_config cfg = { 1, 1 };
+    rk_yajl_parser_config cfg = { 1, 1 };
     int done = 0;
     
     /* check arguments.  We expect exactly one! */
@@ -148,10 +148,10 @@ main(int argc, char ** argv)
         usage(argv[0]);
     }
     
-    g = yajl_gen_alloc(&conf, NULL);
+    g = rk_yajl_gen_alloc(&conf, NULL);
 
     /* ok.  open file.  let's read and parse */
-    hand = yajl_alloc(&callbacks, &cfg, NULL, (void *) g);
+    hand = rk_yajl_alloc(&callbacks, &cfg, NULL, (void *) g);
         
 	while (!done) {
         rd = fread((void *) fileData, 1, sizeof(fileData) - 1, stdin);
@@ -167,28 +167,28 @@ main(int argc, char ** argv)
         
         if (done)
             /* parse any remaining buffered data */
-            stat = yajl_parse_complete(hand);
+            stat = rk_yajl_parse_complete(hand);
         else
             /* read file data, pass to parser */
-            stat = yajl_parse(hand, fileData, rd);
+            stat = rk_yajl_parse(hand, fileData, rd);
 
-        if (stat != yajl_status_ok &&
-            stat != yajl_status_insufficient_data)
+        if (stat != rk_yajl_status_ok &&
+            stat != rk_yajl_status_insufficient_data)
         {
-            unsigned char * str = yajl_get_error(hand, 1, fileData, rd);
+            unsigned char * str = rk_yajl_get_error(hand, 1, fileData, rd);
             fprintf(stderr, (const char *) str);
-            yajl_free_error(hand, str);
+            rk_yajl_free_error(hand, str);
         } else {
             const unsigned char * buf;
             unsigned int len;
-            yajl_gen_get_buf(g, &buf, &len);
+            rk_yajl_gen_get_buf(g, &buf, &len);
             fwrite(buf, 1, len, stdout);
-            yajl_gen_clear(g);
+            rk_yajl_gen_clear(g);
         }
     }
 
-    yajl_gen_free(g);
-    yajl_free(hand);
+    rk_yajl_gen_free(g);
+    rk_yajl_free(hand);
     
     return 0;
 }

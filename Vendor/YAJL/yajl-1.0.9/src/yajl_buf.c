@@ -38,15 +38,15 @@
 
 #define YAJL_BUF_INIT_SIZE 2048
 
-struct yajl_buf_t {
+struct rk_yajl_buf_t {
     unsigned int len;
     unsigned int used;
     unsigned char * data;
-    yajl_alloc_funcs * alloc;
+    rk_yajl_alloc_funcs * alloc;
 };
 
 static
-void yajl_buf_ensure_available(yajl_buf buf, unsigned int want)
+void rk_yajl_buf_ensure_available(rk_yajl_buf buf, unsigned int want)
 {
     unsigned int need;
     
@@ -69,24 +69,24 @@ void yajl_buf_ensure_available(yajl_buf buf, unsigned int want)
     }
 }
 
-yajl_buf yajl_buf_alloc(yajl_alloc_funcs * alloc)
+rk_yajl_buf rk_yajl_buf_alloc(rk_yajl_alloc_funcs * alloc)
 {
-    yajl_buf b = YA_MALLOC(alloc, sizeof(struct yajl_buf_t));
-    memset((void *) b, 0, sizeof(struct yajl_buf_t));
+    rk_yajl_buf b = YA_MALLOC(alloc, sizeof(struct rk_yajl_buf_t));
+    memset((void *) b, 0, sizeof(struct rk_yajl_buf_t));
     b->alloc = alloc;
     return b;
 }
 
-void yajl_buf_free(yajl_buf buf)
+void rk_yajl_buf_free(rk_yajl_buf buf)
 {
     assert(buf != NULL);
     if (buf->data) YA_FREE(buf->alloc, buf->data);
     YA_FREE(buf->alloc, buf);
 }
 
-void yajl_buf_append(yajl_buf buf, const void * data, unsigned int len)
+void rk_yajl_buf_append(rk_yajl_buf buf, const void * data, unsigned int len)
 {
-    yajl_buf_ensure_available(buf, len);
+    rk_yajl_buf_ensure_available(buf, len);
     if (len > 0) {
         assert(data != NULL);
         memcpy(buf->data + buf->used, data, len);
@@ -95,24 +95,24 @@ void yajl_buf_append(yajl_buf buf, const void * data, unsigned int len)
     }
 }
 
-void yajl_buf_clear(yajl_buf buf)
+void rk_yajl_buf_clear(rk_yajl_buf buf)
 {
     buf->used = 0;
     if (buf->data) buf->data[buf->used] = 0;
 }
 
-const unsigned char * yajl_buf_data(yajl_buf buf)
+const unsigned char * rk_yajl_buf_data(rk_yajl_buf buf)
 {
     return buf->data;
 }
 
-unsigned int yajl_buf_len(yajl_buf buf)
+unsigned int rk_yajl_buf_len(rk_yajl_buf buf)
 {
     return buf->used;
 }
 
 void
-yajl_buf_truncate(yajl_buf buf, unsigned int len)
+rk_yajl_buf_truncate(rk_yajl_buf buf, unsigned int len)
 {
     assert(len <= buf->used);
     buf->used = len;

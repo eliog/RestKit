@@ -36,7 +36,7 @@
  Throws an YAJLParserException on parse error.
  @param resource Resource name with extension, for example, file.json
  */
-- (id)yajl_JSONFromResource:(NSString *)resource;
+- (id)rk_yajl_JSONFromResource:(NSString *)resource;
 
 /*!
  Load JSON from bundle.
@@ -45,6 +45,6 @@
  @param error Out error
  @result JSON value (NSArray, NSDictionary) or nil if errored
  */
-- (id)yajl_JSONFromResource:(NSString *)resource options:(YAJLParserOptions)options error:(NSError **)error;
+- (id)rk_yajl_JSONFromResource:(NSString *)resource options:(YAJLParserOptions)options error:(NSError **)error;
 
 @end

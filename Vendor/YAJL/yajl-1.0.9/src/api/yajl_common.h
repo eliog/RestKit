@@ -54,29 +54,29 @@ extern "C" {
 
 /** pointer to a malloc function, supporting client overriding memory
  *  allocation routines */
-typedef void * (*yajl_malloc_func)(void *ctx, unsigned int sz);
+typedef void * (*rk_yajl_malloc_func)(void *ctx, unsigned int sz);
 
 /** pointer to a free function, supporting client overriding memory
  *  allocation routines */
-typedef void (*yajl_free_func)(void *ctx, void * ptr);
+typedef void (*rk_yajl_free_func)(void *ctx, void * ptr);
 
 /** pointer to a realloc function which can resize an allocation. */
-typedef void * (*yajl_realloc_func)(void *ctx, void * ptr, unsigned int sz);
+typedef void * (*rk_yajl_realloc_func)(void *ctx, void * ptr, unsigned int sz);
 
-/** A structure which can be passed to yajl_*_alloc routines to allow the
+/** A structure which can be passed to rk_yajl_*_alloc routines to allow the
  *  client to specify memory allocation functions to be used. */
 typedef struct
 {
     /** pointer to a function that can allocate uninitialized memory */
-    yajl_malloc_func malloc;
+    rk_yajl_malloc_func malloc;
     /** pointer to a function that can resize memory allocations */
-    yajl_realloc_func realloc;
+    rk_yajl_realloc_func realloc;
     /** pointer to a function that can free memory allocated using
      *  reallocFunction or mallocFunction */
-    yajl_free_func free;
+    rk_yajl_free_func free;
     /** a context pointer that will be passed to above allocation routines */
     void * ctx;
-} yajl_alloc_funcs;
+} rk_yajl_alloc_funcs;
 
 #ifdef __cplusplus
 }

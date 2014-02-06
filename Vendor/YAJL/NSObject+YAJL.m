@@ -35,11 +35,11 @@
 
 #pragma mark Gen
 
-- (NSString *)yajl_JSONString {
-  return [self yajl_JSONStringWithOptions:YAJLGenOptionsIncludeUnsupportedTypes  indentString:@"  "];
+- (NSString *)rk_yajl_JSONString {
+  return [self rk_yajl_JSONStringWithOptions:YAJLGenOptionsIncludeUnsupportedTypes  indentString:@"  "];
 }
 
-- (NSString *)yajl_JSONStringWithOptions:(YAJLGenOptions)options indentString:(NSString *)indentString {
+- (NSString *)rk_yajl_JSONStringWithOptions:(YAJLGenOptions)options indentString:(NSString *)indentString {
   YAJLGen *gen = [[YAJLGen alloc] initWithGenOptions:options indentString:indentString];
   [gen object:self];
   NSString *buffer = [[gen buffer] retain];
@@ -49,18 +49,18 @@
 
 #pragma mark Parsing
 
-- (id)yajl_JSON {
+- (id)rk_yajl_JSON {
   NSError *error = nil;
-  id JSON = [self yajl_JSON:&error];
+  id JSON = [self rk_yajl_JSON:&error];
   if (error) [NSException raise:YAJLParserException format:[error localizedDescription], nil];
   return JSON;
 }
 
-- (id)yajl_JSON:(NSError **)error {
-  return [self yajl_JSONWithOptions:YAJLParserOptionsNone error:error];
+- (id)rk_yajl_JSON:(NSError **)error {
+  return [self rk_yajl_JSONWithOptions:YAJLParserOptionsNone error:error];
 }
 
-- (id)yajl_JSONWithOptions:(YAJLParserOptions)options error:(NSError **)error {
+- (id)rk_yajl_JSONWithOptions:(YAJLParserOptions)options error:(NSError **)error {
   NSData *data = nil; 
   if ([self isKindOfClass:[NSData class]]) {
     data = (NSData *)self;

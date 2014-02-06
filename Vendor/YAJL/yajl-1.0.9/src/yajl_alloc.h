@@ -31,8 +31,8 @@
  */ 
 
 /**
- * \file yajl_alloc.h
- * default memory allocation routines for yajl which use malloc/realloc and
+ * \file rk_yajl_alloc.h
+ * default memory allocation routines for rk_yajl which use malloc/realloc and
  * free
  */
 
@@ -45,6 +45,6 @@
 #define YA_FREE(afs, ptr) (afs)->free((afs)->ctx, (ptr))
 #define YA_REALLOC(afs, ptr, sz) (afs)->realloc((afs)->ctx, (ptr), (sz))
 
-void yajl_set_default_alloc_funcs(yajl_alloc_funcs * yaf);
+void rk_yajl_set_default_alloc_funcs(rk_yajl_alloc_funcs * yaf);
 
 #endif
